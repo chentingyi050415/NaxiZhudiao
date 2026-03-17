@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>纳溪竹雕 · 非遗数字文创全案</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+--bamboo:#2f5d50;
+--ink:#111;
+--rice:#f6f3ea;
+--gold:#c8a96a;
+--blue:#3f5665;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:"Noto Serif SC",serif;
+background:var(--rice);
+color:var(--ink);
+overflow-x:hidden;
+line-height:1.7;
+}
+
+/* ---------- 卷轴加载 ---------- */
+
+#loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:var(--rice);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:9999;
+animation:fadeOut 2.5s forwards;
+animation-delay:2.2s;
+}
+
+.scroll{
+width:320px;
+height:120px;
+background:#efe8d8;
+border-left:6px solid var(--gold);
+border-right:6px solid var(--gold);
+box-shadow:0 10px 40px rgba(0,0,0,.2);
+animation:unroll 2s ease forwards;
+}
+
+@keyframes unroll{
+0%{width:0}
+100%{width:320px}
+}
+
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden}
+}
+
+/* ---------- 竹影背景 ---------- */
+
+.bamboo-bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+linear-gradient(rgba(255,255,255,.8),rgba(255,255,255,.8)),
+url("https://images.unsplash.com/photo-1598974357801-cbca100e65d3?auto=format&fit=crop&w=1600&q=60");
+background-size:cover;
+background-attachment:fixed;
+opacity:.18;
+z-index:-1;
+}
+
+/* ---------- 导航 ---------- */
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+background:rgba(255,255,255,.92);
+backdrop-filter:blur(8px);
+border-bottom:1px solid #ddd;
+display:flex;
+justify-content:center;
+z-index:100;
+}
+
+nav ul{
+display:flex;
+gap:35px;
+list-style:none;
+padding:14px;
+}
+
+nav a{
+text-decoration:none;
+color:var(--ink);
+font-weight:500;
+position:relative;
+}
+
+nav a::after{
+content:"";
+position:absolute;
+bottom:-6px;
+left:0;
+width:0%;
+height:2px;
+background:var(--bamboo);
+transition:.4s;
+}
+
+nav a:hover::after{
+width:100%;
+}
+
+/* ---------- 首屏 ---------- */
+
+.hero{
+height:90vh;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:40px;
+}
+
+.hero h1{
+font-size:48px;
+letter-spacing:3px;
+color:var(--bamboo);
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:18px;
+color:#444;
+max-width:700px;
+}
+
+/* ---------- section ---------- */
+
+section{
+padding:100px 10%;
+max-width:1200px;
+margin:auto;
+}
+
+.section-title{
+font-size:32px;
+margin-bottom:40px;
+color:var(--bamboo);
+position:relative;
+}
+
+.section-title::before{
+content:"";
+position:absolute;
+left:-20px;
+top:10px;
+width:6px;
+height:28px;
+background:var(--gold);
+}
+
+/* ---------- 内容卡片 ---------- */
+
+.card{
+background:white;
+border-radius:10px;
+padding:30px;
+margin-bottom:40px;
+box-shadow:0 12px 40px rgba(0,0,0,.06);
+transition:.4s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+/* ---------- 竹雕纹样 hover ---------- */
+
+.pattern{
+border:1px solid #e6e2d7;
+padding:18px;
+margin-top:20px;
+transition:.4s;
+}
+
+.pattern:hover{
+background:#f0ede4;
+border-color:var(--gold);
+}
+
+/* ---------- 竹枝底部 ---------- */
+
+.footer{
+height:160px;
+display:flex;
+align-items:center;
+justify-content:center;
+color:#777;
+position:relative;
+}
+
+.bamboo{
+position:absolute;
+bottom:0;
+width:100%;
+height:160px;
+background:url("https://images.unsplash.com/photo-1597758893255-02f1b1db5c9d?auto=format&fit=crop&w=1500&q=60");
+background-size:cover;
+opacity:.25;
+animation:sway 6s ease-in-out infinite alternate;
+}
+
+@keyframes sway{
+from{transform:translateX(-10px)}
+to{transform:translateX(10px)}
+}
+
+/* ---------- 响应式 ---------- */
+
+@media(max-width:900px){
+
+.hero h1{
+font-size:32px
+}
+
+section{
+padding:80px 7%
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="loader">
+<div class="scroll"></div>
+</div>
+
+<div class="bamboo-bg"></div>
+
+<nav>
+<ul>
+<li><a href="#intro">项目背景</a></li>
+<li><a href="#product">产品体系</a></li>
+<li><a href="#tech">技术实现</a></li>
+<li><a href="#media">传播策略</a></li>
+<li><a href="#business">商业模式</a></li>
+<li><a href="#future">发展规划</a></li>
+</ul>
+</nav>
+
+<div class="hero">
+
+<h1>纳溪竹雕 · 非遗数字文创全案</h1>
+
+<p>
+融合中国传统竹雕艺术与数字技术创新，
+打造“数字孤品身份证 + 云刻竹互动体验”的非遗数字文创生态。
+</p>
+
+</div>
+
+<section id="intro">
+
+<h2 class="section-title">项目背景</h2>
+
+<div class="card">
+<p>
+纳溪竹雕为四川省级非物质文化遗产，
+以精细刀法与竹材工艺著称。
+当前面临“墙内开花墙外香”的市场现象，
+国内认知度有限，但在海外收藏市场价值极高。
+</p>
+
+<div class="pattern">
+2024年中国非遗市场规模约4500亿元，年轻消费群体成为主力。
+</div>
+
+</div>
+
+</section>
+
+<section id="product">
+
+<h2 class="section-title">核心产品体系</h2>
+
+<div class="card">
+
+<h3>数字孤品身份证</h3>
+
+<p>
+基于区块链存证技术，为每件竹雕生成唯一数字身份。
+包含传承人信息、刻刀工艺、作品溯源记录。
+</p>
+
+<div class="pattern">
+定价：299-499 元
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>云刻竹互动体验</h3>
+
+<p>
+通过 AR / Web3D 技术模拟竹雕制作流程，
+用户可体验选竹、画稿、运刀、打磨全过程。
+</p>
+
+<div class="pattern">
+10级雕刻关卡 + 社交分享机制
+</div>
+
+</div>
+
+</section>
+
+<section id="tech">
+
+<h2 class="section-title">技术实现路径</h2>
+
+<div class="card">
+
+<p>
+采用“区块链 + AR + 云渲染”技术架构。
+</p>
+
+<ul>
+<li>联盟链数字存证</li>
+<li>IPFS 分布式存储</li>
+<li>WebAR 互动展示</li>
+<li>云端 3D 渲染</li>
+</ul>
+
+</div>
+
+</section>
+
+<section id="media">
+
+<h2 class="section-title">传播策略</h2>
+
+<div class="card">
+
+<p>
+全平台矩阵传播：
+</p>
+
+<ul>
+<li>抖音：视觉冲击短视频</li>
+<li>小红书：文创生活方式种草</li>
+<li>B站：深度文化纪录</li>
+<li>微博：话题营销</li>
+</ul>
+
+</div>
+
+</section>
+
+<section id="business">
+
+<h2 class="section-title">商业模式</h2>
+
+<div class="card">
+
+<ul>
+
+<li>数字产品销售</li>
+
+<li>会员订阅</li>
+
+<li>IP授权</li>
+
+<li>技术服务</li>
+
+<li>广告与品牌合作</li>
+
+</ul>
+
+</div>
+
+</section>
+
+<section id="future">
+
+<h2 class="section-title">未来发展</h2>
+
+<div class="card">
+
+<p>
+
+短期：打造非遗数字化示范项目  
+中期：构建全球非遗数字文创 IP  
+长期：建立纳溪竹雕文化产业园  
+
+</p>
+
+</div>
+
+</section>
+
+<div class="footer">
+
+<div class="bamboo"></div>
+
+<p>纳溪竹雕非遗数字文创项目 · GitHub 展示页面</p>
+
+</div>
+
+<script>
+
+/* 平滑滚动 */
+
+document.querySelectorAll("nav a").forEach(a=>{
+a.onclick=e=>{
+e.preventDefault()
+document.querySelector(a.getAttribute("href"))
+.scrollIntoView({behavior:"smooth"})
+}
+})
+
+/* 滚动淡入 */
+
+const cards=document.querySelectorAll(".card")
+
+window.addEventListener("scroll",()=>{
+
+cards.forEach(c=>{
+
+let top=c.getBoundingClientRect().top
+
+if(top<window.innerHeight-100){
+
+c.style.opacity=1
+c.style.transform="translateY(0)"
+
+}
+
+})
+
+})
+
+</script>
+
+</body>
+</html>
