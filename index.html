@@ -2,180 +2,237 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>竹韵链藏 | 纳溪竹雕·数字碑林</title>
-    <!-- 引入 html2canvas 用于海报生成 -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <!-- 字体与图标库 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>竹韵链藏 | 刀尖上的数字碑林 - 纳溪竹雕数字藏品</title>
+    <!-- 字体与图标 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- html2canvas 用于海报生成 -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none; /* 避免移动端长按菜单，提升体验 */
         }
 
         body {
-            background: #2c2418;  /* 竹木深色底 */
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Noto Sans', system-ui, -apple-system, sans-serif;
-            color: #efe6d7;
-            padding-bottom: 20px;
+            background: #1e1912;
+            font-family: 'Noto Serif SC', 'Segoe UI', 'PingFang SC', Roboto, system-ui, -apple-system, sans-serif;
+            color: #e9e0cf;
+            line-height: 1.5;
+            scroll-behavior: smooth;
         }
 
-        /* 主容器 */
-        .app-container {
-            max-width: 500px;
+        /* 全局容器 */
+        .site-wrapper {
+            max-width: 1400px;
             margin: 0 auto;
-            background: #3e2e22;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            border-radius: 28px 28px 0 0;
-            overflow: hidden;
-            min-height: 100vh;
+            background: #2c241a;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            overflow-x: hidden;
         }
 
-        /* 头部品牌 */
-        .brand-header {
-            background: #1f1912;
-            padding: 20px 20px 12px 20px;
-            text-align: center;
-            border-bottom: 2px solid #c0a16b;
+        /* 水墨竹韵背景点缀 */
+        .bamboo-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.08;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200"><path fill="none" stroke="%23b8863d" stroke-width="2" d="M200 200 L220 600 L190 900 M300 150 L310 550 L280 950 M500 220 L530 680 L510 1050 M650 180 L670 620 L640 980" stroke-linecap="round"/><path fill="none" stroke="%236b4c2c" stroke-width="1.5" d="M210 300 L230 580 M310 280 L325 620 M510 310 L530 720 M660 250 L675 650"/><circle cx="215" cy="260" r="3" fill="%23b8863d"/><circle cx="315" cy="240" r="3" fill="%23b8863d"/></svg>');
+            background-repeat: repeat-y;
+            background-position: top center;
+            background-size: 400px auto;
         }
-        .brand-header h1 {
-            font-size: 1.9rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-            background: linear-gradient(135deg, #e9d6b0, #b88d44);
+
+        /* 主体内容 */
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 0 24px 40px;
+        }
+
+        /* 头部导航 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px 0;
+            border-bottom: 1px solid #7d684b;
+            margin-bottom: 30px;
+        }
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f5e2b0, #c69c6d);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            letter-spacing: 2px;
         }
-        .brand-header p {
-            font-size: 0.75rem;
+        .logo p {
+            font-size: 0.7rem;
             opacity: 0.8;
-            margin-top: 6px;
         }
-
-        /* 标签页导航 */
-        .tab-bar {
+        .nav-links {
             display: flex;
-            background: #2c221b;
-            border-bottom: 1px solid #5e4a35;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            gap: 28px;
+            flex-wrap: wrap;
         }
-        .tab {
-            flex: 1;
-            text-align: center;
-            padding: 12px 0;
+        .nav-links a {
+            color: #e9d7bf;
+            text-decoration: none;
             font-weight: 500;
-            font-size: 0.9rem;
-            color: #bfae93;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .tab.active {
-            color: #f5cf8e;
-            border-bottom: 2px solid #f5cf8e;
-            background: #3e2e22;
-        }
-
-        /* 页面内容区 */
-        .page {
-            display: none;
-            padding: 20px 16px 30px;
-            animation: fadeIn 0.3s ease;
-        }
-        .page.active-page {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-
-        /* 卡片样式 */
-        .card {
-            background: rgba(30, 23, 18, 0.8);
-            backdrop-filter: blur(2px);
-            border-radius: 24px;
-            padding: 18px;
-            margin-bottom: 20px;
-            border: 1px solid #7d684b;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        .story-card {
-            background: #2b221a;
-            border-left: 6px solid #c0a16b;
-        }
-
-        /* 按钮 */
-        .btn {
-            display: inline-block;
-            background: #b8863d;
-            color: #1e160f;
-            padding: 12px 20px;
-            border-radius: 60px;
-            font-weight: bold;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: none;
+            transition: 0.2s;
             font-size: 1rem;
-            width: 100%;
-            margin-top: 10px;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
         }
-        .btn-secondary {
-            background: #5a4633;
-            color: #f0e2cf;
+        .nav-links a:hover {
+            color: #f5cf8e;
+            border-bottom-color: #c0a16b;
         }
-        .btn-small {
-            padding: 8px 12px;
-            font-size: 0.85rem;
-            width: auto;
-            margin-top: 6px;
+
+        /* 通用卡片样式 */
+        .card {
+            background: rgba(38, 30, 22, 0.75);
+            backdrop-filter: blur(4px);
+            border-radius: 32px;
+            padding: 28px 24px;
+            margin-bottom: 40px;
+            border: 1px solid #a0835a;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.4);
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            border-left: 6px solid #e6bf7a;
+            padding-left: 20px;
+            letter-spacing: 2px;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .story-block {
+            background: #2b231c;
+            border-radius: 28px;
+            padding: 20px;
+            border-top: 4px solid #c0a16b;
+        }
+        .story-block h3 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: #f3dfb2;
         }
         .price-group {
             display: flex;
-            gap: 12px;
-            margin: 16px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px 0;
         }
         .price-card {
-            background: #211b15;
-            border-radius: 20px;
-            padding: 12px;
-            flex: 1;
+            background: #1f1912;
+            border-radius: 28px;
+            padding: 20px;
             text-align: center;
+            flex: 1;
+            min-width: 150px;
             cursor: pointer;
             border: 1px solid transparent;
             transition: 0.2s;
         }
         .price-card.selected {
             border-color: #f5cf8e;
-            background: #3f2e1f;
+            background: #3c2c1e;
+            box-shadow: 0 0 12px rgba(245,207,142,0.4);
         }
         .price {
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: bold;
             color: #f5cf8e;
         }
+        .btn {
+            background: #b67b3a;
+            color: #1e160f;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #c6a15e;
+            color: #f0e2cf;
+        }
+        .btn-outline:hover {
+            background: #b67b3a;
+            color: #1e160f;
+        }
 
-        /* AR 雕刻区 */
-        .ar-container {
-            position: relative;
-            width: 100%;
+        /* 刻刀图鉴网格 */
+        .knife-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .knife-card {
+            background: #2b221a;
+            border-radius: 20px;
+            padding: 12px 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.1s;
+            border: 1px solid #5f4a32;
+        }
+        .knife-card.locked {
+            opacity: 0.6;
+            filter: grayscale(0.3);
+        }
+        .knife-icon {
+            font-size: 2rem;
+        }
+
+        /* AR 区域 (电脑/手机自适应) */
+        .ar-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+        .ar-camera {
+            flex: 2;
+            min-width: 280px;
             background: #000;
-            border-radius: 28px;
+            border-radius: 32px;
             overflow: hidden;
-            margin: 16px 0;
-            aspect-ratio: 3 / 4;
+            position: relative;
+            aspect-ratio: 4 / 3;
         }
         #arVideo {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1); /* 前置镜像更自然 */
+            transform: scaleX(-1);
         }
         #arCanvas {
             position: absolute;
@@ -183,88 +240,83 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 5;
-            touch-action: none; /* 优化触摸绘画 */
+            cursor: crosshair;
         }
-        .toolbar {
+        .ar-tools {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 28px;
+            padding: 20px;
+        }
+        .tool-buttons {
             display: flex;
+            flex-wrap: wrap;
             gap: 12px;
-            justify-content: center;
-            margin: 12px 0;
+            margin: 20px 0;
         }
         .chisel {
             background: #3e2a1c;
-            padding: 6px 12px;
+            padding: 8px 16px;
             border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: bold;
             cursor: pointer;
             border: 1px solid #b8863d;
         }
-        .chisel.active-tool {
+        .active-tool {
             background: #b8863d;
             color: #1f1912;
         }
 
-        /* 图鉴网格 */
-        .knife-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-        .knife-card {
-            background: #2e241d;
-            border-radius: 16px;
-            padding: 10px 6px;
-            text-align: center;
-            position: relative;
-            transition: 0.1s;
-        }
-        .knife-card.locked {
-            opacity: 0.55;
-            filter: grayscale(0.4);
-        }
-        .knife-icon {
-            font-size: 2rem;
-        }
-        .knife-name {
-            font-size: 0.7rem;
-            font-weight: 500;
-            margin-top: 6px;
-        }
-        .lock-icon {
-            position: absolute;
-            top: 6px;
-            right: 8px;
-            font-size: 0.8rem;
-            color: #e6c27a;
-        }
-
-        /* 证书样式 */
+        /* 证书区 */
         .certificate {
             background: linear-gradient(145deg, #241e17, #19130e);
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 28px;
+            padding: 24px;
             text-align: center;
-            border: 1px solid #dbb469;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
         .hash {
             font-family: monospace;
-            font-size: 0.7rem;
             background: #00000066;
             padding: 6px;
             border-radius: 12px;
             word-break: break-all;
         }
 
-        /* 弹窗 */
+        /* 传播模块（作业展示） */
+        .spread-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #1f1912;
+            border-radius: 24px;
+            padding: 18px;
+            flex: 1;
+            text-align: center;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .content { padding: 0 16px 30px; }
+            .section-title { font-size: 1.8rem; }
+            .navbar { flex-direction: column; gap: 12px; }
+            .nav-links { justify-content: center; }
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0 20px;
+            border-top: 1px solid #5e4a35;
+            margin-top: 40px;
+            font-size: 0.8rem;
+        }
         .modal {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
+            top:0; left:0;
+            width:100%; height:100%;
+            background: rgba(0,0,0,0.85);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -279,520 +331,339 @@
         }
         .modal-content {
             background: #352c22;
-            max-width: 280px;
             border-radius: 32px;
-            padding: 24px;
+            padding: 28px;
+            max-width: 320px;
             text-align: center;
         }
-
-        /* 其他 */
-        .badge {
-            background: #b8863d;
-            color: #1f1912;
-            border-radius: 40px;
-            padding: 4px 12px;
-            font-size: 0.7rem;
-            display: inline-block;
-        }
-        .footer-note {
-            font-size: 0.65rem;
-            text-align: center;
-            margin-top: 20px;
-            opacity: 0.6;
-        }
-        i, .fas, .far {
-            margin-right: 5px;
-        }
+        i { margin-right: 6px; }
     </style>
 </head>
 <body>
-<div class="app-container">
-    <div class="brand-header">
-        <h1>竹韵链藏</h1>
-        <p>刀尖上的数字碑林 · 纳溪竹雕非遗传承</p>
-    </div>
-    <div class="tab-bar">
-        <div class="tab active" data-tab="home">🏠 首页</div>
-        <div class="tab" data-tab="collection">🗡️ 七十刻刀</div>
-        <div class="tab" data-tab="ar">✨ AR雕刻</div>
-        <div class="tab" data-tab="my">📜 我的藏品</div>
-    </div>
+<div class="site-wrapper">
+    <div class="bamboo-bg"></div>
+    <div class="content">
+        <div class="navbar">
+            <div class="logo">
+                <h1>竹韵链藏</h1>
+                <p>刀尖上的数字碑林 · 纳溪竹雕</p>
+            </div>
+            <div class="nav-links">
+                <a href="#home">首页</a>
+                <a href="#story">三篇匠心</a>
+                <a href="#knives">七十刻刀</a>
+                <a href="#ar">AR雕刻</a>
+                <a href="#collection">我的藏品</a>
+                <a href="#spread">传播回声</a>
+            </div>
+        </div>
 
-    <!-- 首页模块 -->
-    <div id="homePage" class="page active-page">
-        <div class="card story-card">
-            <h3><i class="fas fa-bamboo"></i> 选竹篇</h3>
-            <p>“只有最冷的冬天采下的竹，才能刻出最暖的故事”——背光阴山、异型竹严苛标准，仅占野生竹林5%，冬至后15天内采伐。</p>
-            <span class="badge">刻刀 1-10号</span>
+        <!-- 英雄区 沉浸式 -->
+        <div id="home" class="card" style="text-align: center; background: rgba(20,16,10,0.85);">
+            <h2 style="font-size: 2.5rem; margin-bottom: 12px;">竹子会腐烂，<span style="color:#e6bf7a;">但刀痕不会</span></h2>
+            <p style="font-size:1.2rem; max-width: 700px; margin: 0 auto;">“总得有人替时光刻下证据。” —— 传承人 黄建</p>
+            <div style="margin: 28px 0;">
+                <a href="#purchase" class="btn" style="font-size:1.2rem; padding: 14px 36px;"><i class="fas fa-hand-holding-heart"></i> 成为守护者 · 拥有第一把虚拟刻刀</a>
+            </div>
+            <div class="grid-3" style="margin-top: 20px;">
+                <div><i class="fas fa-link"></i> 联盟链存证 | 唯一数字身份</div>
+                <div><i class="fas fa-vr-cardboard"></i> AR模拟雕刻 | 指尖非遗体验</div>
+                <div><i class="fas fa-users"></i> 70把刻刀图鉴 | 社交裂变解锁</div>
+            </div>
         </div>
-        <div class="card story-card">
-            <h3><i class="fas fa-fire"></i> 制竹篇</h3>
-            <p>高温蒸煮，自然风干一两年，含水率＜12%，二十余道工序的匠心坚守。</p>
-            <span class="badge">刻刀 11-30号</span>
+
+        <!-- 三大故事线 (人文叙事) -->
+        <div id="story">
+            <div class="section-title"><i class="fas fa-feather-alt"></i> 匠心三篇 · 刀痕史诗</div>
+            <div class="grid-3">
+                <div class="story-block"><h3>🎋 选竹篇</h3><p>“只有最冷的冬天采下的竹，才能刻出最暖的故事”<br>刻刀1-10号：背光阴山，严苛选材，仅占野生竹林5%，冬至后15天内采伐。</p><span class="badge" style="background:#b8863d; padding:2px 10px;">刻刀 1-10</span></div>
+                <div class="story-block"><h3>🔥 制竹篇</h3><p>高温蒸煮，自然风干一两年，含水率＜12%，二十余道工序的匠心坚守。<br>刻刀11-30号：十八个月风骨，铸就永恒纹理。</p><span class="badge" style="background:#b8863d;">刻刀 11-30</span></div>
+                <div class="story-block"><h3>✍️ 雕刻篇</h3><p>镂空深浮雕，最深5厘米，以刀为笔，心手合一。<br>刻刀31-70号：40余种刀法，演绎竹上丹青。</p><span class="badge">刻刀 31-70</span></div>
+            </div>
         </div>
-        <div class="card story-card">
-            <h3><i class="fas fa-cut"></i> 雕刻篇</h3>
-            <p>镂空、深浮雕，最深可达5厘米，以刀为笔，心手合一，一件作品最多用40余种刻刀。</p>
-            <span class="badge">刻刀 31-70号</span>
-        </div>
-        <div class="card">
-            <h3><i class="fas fa-gem"></i> 守护藏品 · 开启传承</h3>
-            <p>购买任意数字藏品，即刻获得「第一把虚拟刻刀」，成为纳溪竹雕守护者，并解锁AR模拟雕刻。</p>
+
+        <!-- 购买区块 定价策略 -->
+        <div id="purchase" class="card">
+            <h3 class="section-title" style="margin-top:0;">🪙 数字藏品 · 即刻守护</h3>
             <div class="price-group" id="priceGroup">
-                <div class="price-card" data-price="9.9" data-type="basic">
-                    <div class="price">¥9.9</div>
-                    <div>基础款</div>
-                    <small>单把刻刀数字卡</small>
+                <div class="price-card" data-price="9.9" data-type="basic"><div class="price">¥9.9</div><div>基础款</div><small>单把刻刀数字卡</small></div>
+                <div class="price-card" data-price="39" data-type="collect"><div class="price">¥39</div><div>收藏款</div><small>刻刀+竹雕纹样套装</small></div>
+                <div class="price-card" data-price="99" data-type="limited"><div class="price">¥99</div><div>限量款</div><small>传承人签名+实体徽章</small></div>
+            </div>
+            <button class="btn" id="buyBtn"><i class="fas fa-gem"></i> 立即购买 · 开启链上证书</button>
+            <p style="margin-top: 16px; text-align:center;">首批限量10万份，永久上链存证，AR雕刻即刻解锁</p>
+        </div>
+
+        <!-- 七十刻刀图鉴 (可收集) -->
+        <div id="knives" class="card">
+            <h3 class="section-title">🗡️ 七十刻刀图鉴 · 刀痕秘语</h3>
+            <p>每把刻刀皆藏匠心故事，收集全部可兑换实体竹雕优惠券。<span id="shareHint" style="color:#f5cf8e;"> 分享海报解锁隐藏第71把“传承之刀”</span></p>
+            <div id="knifeGrid" class="knife-grid"></div>
+        </div>
+
+        <!-- AR模拟雕刻 + 科技体验 -->
+        <div id="ar" class="card">
+            <h3 class="section-title"><i class="fas fa-camera"></i> AR模拟雕刻 · 心手合一</h3>
+            <div class="ar-panel">
+                <div class="ar-camera">
+                    <video id="arVideo" autoplay playsinline muted></video>
+                    <canvas id="arCanvas"></canvas>
                 </div>
-                <div class="price-card" data-price="39" data-type="collect">
-                    <div class="price">¥39</div>
-                    <div>收藏款</div>
-                    <small>刻刀+纹样组合套装</small>
-                </div>
-                <div class="price-card" data-price="99" data-type="limited">
-                    <div class="price">¥99</div>
-                    <div>限量款</div>
-                    <small>数字签名+实体徽章</small>
+                <div class="ar-tools">
+                    <p><i class="fas fa-cut"></i> 选择虚拟刻刀，在屏幕上滑动画出“刀痕”</p>
+                    <div class="tool-buttons" id="toolbar">
+                        <div class="chisel active-tool" data-tool="圆刀">🔪 圆刀 · 细线</div>
+                        <div class="chisel" data-tool="平刀">🪚 平刀 · 宽痕</div>
+                        <div class="chisel" data-tool="尖刀">✍️ 尖刀 · 深刻</div>
+                        <div class="chisel" id="clearCanvasBtn">🧹 清屏</div>
+                    </div>
+                    <button class="btn btn-outline" id="shareARPosterBtn" style="width:100%; margin-top:20px;"><i class="fas fa-share-alt"></i> 分享AR作品 · 解锁随机刻刀</button>
+                    <p class="small" style="margin-top: 12px;">手指/鼠标滑动即可雕刻，让刀痕在数字世界永生</p>
                 </div>
             </div>
-            <button class="btn" id="buyNowBtn"><i class="fas fa-hand-holding-heart"></i> 立即购买·成为守护者</button>
-            <p style="font-size:0.7rem; margin-top:8px;">首批限量10万份，永久链上存证</p>
         </div>
-        <div class="card">
-            <h3>传承人寄语</h3>
-            <p><i class="fas fa-quote-left"></i> 竹子会腐烂，但刀痕不会。总得有人替时光刻下证据。——黄建</p>
-        </div>
-    </div>
 
-    <!-- 七十刻刀图鉴页 -->
-    <div id="collectionPage" class="page">
-        <h3><i class="fas fa-tools"></i> 70把刻刀图鉴 · 刀痕史诗</h3>
-        <p>每把刻刀背后都有独特的工艺与故事，收集解锁完整图鉴可兑换实体优惠券。</p>
-        <div id="knifeGrid" class="knife-grid"></div>
-        <div class="footer-note">⭐ 分享海报可解锁隐藏「传承之刀」第71把</div>
-    </div>
+        <!-- 我的藏品: 数字证书 + 守护者身份 -->
+        <div id="collection" class="card">
+            <h3 class="section-title">📜 链上证书 · 守护者殿堂</h3>
+            <div id="certificateArea" class="certificate">
+                <i class="fas fa-certificate" style="font-size:2.4rem;"></i>
+                <div id="certInfo">尚未拥有数字藏品，请前往购买成为纳溪竹雕守护者</div>
+                <div id="guardianDisplay" style="margin-top: 12px;"></div>
+                <button id="generatePosterBtn" class="btn btn-outline" style="margin-top: 20px;"><i class="fas fa-camera"></i> 生成守护者海报</button>
+            </div>
+            <div style="margin-top: 24px;">
+                <div>🎯 图鉴收集进度：<span id="collectProgress">0</span> / 70</div>
+                <progress id="progressBar" value="0" max="70" style="width:100%; height:12px; border-radius:10px;"></progress>
+                <p id="couponMsg" style="margin-top: 8px;"></p>
+            </div>
+        </div>
 
-    <!-- AR模拟雕刻页 -->
-    <div id="arPage" class="page">
-        <div class="card" style="padding:10px;">
-            <h3>📸 AR模拟雕刻</h3>
-            <p>虚拟刻刀·心手合一 | 在真实环境中留下数字刀痕</p>
+        <!-- 传播模块：体现新闻传播作业宣传效果 -->
+        <div id="spread" class="card">
+            <h3 class="section-title"><i class="fas fa-chart-line"></i> 破圈回声 · 文化共振</h3>
+            <div class="spread-stats">
+                <div class="stat-card"><i class="fas fa-hashtag"></i> #70把刻刀的秘密<br>话题阅读量 <strong>1280W+</strong></div>
+                <div class="stat-card"><i class="fas fa-share-alt"></i> 社交裂变分享率<br><strong>+42%</strong></div>
+                <div class="stat-card"><i class="fas fa-video"></i> AR互动时长<br><strong>3.2分钟</strong></div>
+                <div class="stat-card"><i class="fas fa-users"></i> 守护者社群<br><strong>2.6W人</strong></div>
+            </div>
+            <p style="text-align:center;">✨ 抖音/B站/小红书 KOL深度合作 · 央视非遗晚会联动预热 ✨</p>
         </div>
-        <div class="ar-container">
-            <video id="arVideo" autoplay playsinline muted></video>
-            <canvas id="arCanvas"></canvas>
-        </div>
-        <div class="toolbar" id="toolbar">
-            <div class="chisel active-tool" data-tool="圆刀">🔪 圆刀 (细线)</div>
-            <div class="chisel" data-tool="平刀">🪚 平刀 (宽痕)</div>
-            <div class="chisel" data-tool="尖刀">✍️ 尖刀 (深刻)</div>
-            <div class="chisel" id="clearCanvasBtn">🧹 清屏</div>
-        </div>
-        <button class="btn btn-secondary" id="shareARBtn"><i class="fas fa-share-alt"></i> 生成海报·分享得隐藏刻刀</button>
-        <p style="font-size:0.7rem; text-align:center;">手指滑动屏幕即可“雕刻”，感受刀痕永恒之美</p>
-    </div>
 
-    <!-- 我的藏品页 -->
-    <div id="myPage" class="page">
-        <div id="certificateArea" class="certificate">
-            <i class="fas fa-certificate" style="font-size:2rem;"></i>
-            <h3>数字证书 · 链上存证</h3>
-            <div id="certInfo">尚未拥有任何数字藏品，请前往首页购买</div>
-        </div>
-        <div class="card">
-            <h3>📖 守护者身份</h3>
-            <p id="guardianId">未激活</p>
-            <button id="sharePosterBtn" class="btn btn-small"><i class="fas fa-camera"></i> 生成守护者海报</button>
-        </div>
-        <div class="card">
-            <h3>🎁 图鉴收集进度</h3>
-            <div id="collectProgress">已解锁: 0 / 70</div>
-            <progress id="progressBar" value="0" max="70" style="width:100%; height:10px; border-radius:5px;"></progress>
-            <p id="couponMsg" style="margin-top:8px;"></p>
-        </div>
+        <footer>
+            <p>© 竹韵链藏 | 纳溪竹雕非遗数字传承项目 | 联盟链存证 ｜ 刀尖上的数字碑林</p>
+        </footer>
     </div>
 </div>
 
-<!-- 全局模态框 -->
-<div id="globalModal" class="modal">
-    <div class="modal-content">
-        <i class="fas fa-check-circle" style="font-size:2rem;color:#f5cf8e;"></i>
-        <p id="modalText">购买成功！</p>
-        <button id="closeModal" class="btn btn-small">确定</button>
-    </div>
-</div>
+<!-- 模态框 -->
+<div id="globalModal" class="modal"><div class="modal-content"><i class="fas fa-check-circle" style="font-size:2rem;color:#f5cf8e;"></i><p id="modalText"></p><button id="closeModal" class="btn btn-small">确定</button></div></div>
 
 <script>
-    // ---------- 模拟区块链状态 ----------
-    let userHasPurchased = false;        // 是否拥有藏品
-    let guardianNumber = Math.floor(Math.random() * 10000) + 1000;  // 守护者编号
-    let unlockedKnives = [];             // 解锁的刻刀索引 0~69
-    let hiddenUnlocked = false;           // 第71把隐藏刀 (索引70)
+    // ------------------ 模拟状态管理 ------------------
+    let userPurchased = false;
+    let guardianNumber = Math.floor(Math.random() * 9000) + 1000;
+    let unlockedKnives = [];      // 已解锁刻刀索引0~69
+    let hiddenUnlocked = false;    // 第71把隐藏刀
     let certificateData = null;
-    
-    // 刻刀基础数据 (70把)
+
     const KNIFE_NAMES = [];
-    for(let i=1; i<=70; i++) {
-        let section = "";
-        if(i<=10) section = "选竹篇";
-        else if(i<=30) section = "制竹篇";
-        else section = "雕刻篇";
+    for(let i=1;i<=70;i++) {
+        let section = i<=10 ? "选竹篇" : (i<=30 ? "制竹篇" : "雕刻篇");
         KNIFE_NAMES.push(`刻刀${i}号 · ${section}`);
     }
-    // 初始化存储
-    function loadLocalData() {
-        const saved = localStorage.getItem("zhuyun_user");
+
+    // 本地存储
+    function loadData() {
+        const saved = localStorage.getItem("zhuyun_v2");
         if(saved) {
             let data = JSON.parse(saved);
-            userHasPurchased = data.purchased || false;
+            userPurchased = data.purchased || false;
             guardianNumber = data.guardian || guardianNumber;
             unlockedKnives = data.unlocked || [];
             hiddenUnlocked = data.hidden || false;
-            if(userHasPurchased && !unlockedKnives.includes(0)) {
-                // 确保第一把刻刀解锁
-                if(!unlockedKnives.includes(0)) unlockedKnives.push(0);
-            }
+            if(userPurchased && !unlockedKnives.includes(0)) unlockedKnives.push(0);
         } else {
-            // 新用户，未购买时无刻刀解锁
-            if(userHasPurchased === false) unlockedKnives = [];
+            if(userPurchased && !unlockedKnives.includes(0)) unlockedKnives.push(0);
         }
-        // 若已购买但第一把刻刀没在解锁列表，补加
-        if(userHasPurchased && !unlockedKnives.includes(0)) unlockedKnives.push(0);
-        updateUIByState();
+        updateUI();
     }
-    function saveLocalData() {
-        let data = {
-            purchased: userHasPurchased,
+    function saveData() {
+        localStorage.setItem("zhuyun_v2", JSON.stringify({
+            purchased: userPurchased,
             guardian: guardianNumber,
             unlocked: unlockedKnives,
             hidden: hiddenUnlocked
-        };
-        localStorage.setItem("zhuyun_user", JSON.stringify(data));
+        }));
     }
-    
-    // 更新UI：图鉴、证书、进度条
-    function updateUIByState() {
+
+    function updateUI() {
         renderKnifeGallery();
         updateCertAndProgress();
-        if(userHasPurchased) {
-            document.getElementById("guardianId").innerHTML = `纳溪竹雕第 ${guardianNumber} 号守护者 <i class="fas fa-leaf"></i>`;
-        } else {
-            document.getElementById("guardianId").innerHTML = "尚未守护，请购买数字藏品开启传承";
-        }
-        saveLocalData();
+        saveData();
     }
-    
-    // 渲染70刻刀网格 + 隐藏刀展示
+
     function renderKnifeGallery() {
         const container = document.getElementById("knifeGrid");
         if(!container) return;
         container.innerHTML = "";
-        // 展示70把
-        for(let i=0; i<70; i++) {
-            const isUnlocked = unlockedKnives.includes(i);
+        for(let i=0;i<70;i++) {
+            const unlocked = unlockedKnives.includes(i);
             const div = document.createElement("div");
-            div.className = `knife-card ${!isUnlocked ? 'locked' : ''}`;
-            div.innerHTML = `
-                <div class="knife-icon">${isUnlocked ? '🗡️' : '🔒'}</div>
-                <div class="knife-name">${KNIFE_NAMES[i]}</div>
-                ${!isUnlocked ? '<div class="lock-icon"><i class="fas fa-lock"></i></div>' : '<div class="lock-icon"><i class="fas fa-check-circle" style="color:#b8863d;"></i></div>'}
-            `;
-            if(isUnlocked) {
-                div.addEventListener("click", () => {
-                    showToast(`「${KNIFE_NAMES[i]}」工艺: 匠心独运，每一刀皆故事。`);
-                });
-            } else {
-                div.addEventListener("click", () => {
-                    showToast("🔒 此刀尚未解锁，请分享海报或邀请好友解锁更多刻刀！");
-                });
-            }
+            div.className = `knife-card ${!unlocked ? 'locked' : ''}`;
+            div.innerHTML = `<div class="knife-icon">${unlocked ? '🗡️' : '🔒'}</div><div class="knife-name">${KNIFE_NAMES[i]}</div>`;
+            if(unlocked) div.onclick = () => showToast(`「${KNIFE_NAMES[i]}」工艺：${i<10?'背阴山竹选材':(i<30?'十八个月风干制竹':'深浮雕心手合一')}`);
+            else div.onclick = () => showToast("🔒 尚未解锁，分享AR作品或邀请好友收集刻刀！");
             container.appendChild(div);
         }
-        // 第71把隐藏刀
+        // 隐藏71刀
         const hiddenDiv = document.createElement("div");
         hiddenDiv.className = `knife-card ${!hiddenUnlocked ? 'locked' : ''}`;
-        hiddenDiv.innerHTML = `
-            <div class="knife-icon">✨</div>
-            <div class="knife-name">传承之刀 (第71把)</div>
-            ${!hiddenUnlocked ? '<div class="lock-icon"><i class="fas fa-lock"></i></div>' : '<div class="lock-icon"><i class="fas fa-star"></i></div>'}
-        `;
-        if(hiddenUnlocked) {
-            hiddenDiv.addEventListener("click", () => showToast("传承之刀：凝聚黄建大师70把刻刀之魂，永恒刀痕。"));
-        } else {
-            hiddenDiv.addEventListener("click", () => showToast("分享AR海报或邀请好友，即可解锁隐藏之刀！"));
-        }
+        hiddenDiv.innerHTML = `<div class="knife-icon">✨</div><div class="knife-name">传承之刀·第71把</div>`;
+        if(hiddenUnlocked) hiddenDiv.onclick = () => showToast("传承之刀：黄建大师精神凝聚，刀痕永存。");
+        else hiddenDiv.onclick = () => showToast("分享海报即可解锁此刀！");
         container.appendChild(hiddenDiv);
     }
-    
-    // 证书 & 进度更新
+
     function updateCertAndProgress() {
         const certDiv = document.getElementById("certInfo");
-        const progressEl = document.getElementById("collectProgress");
-        const progressBar = document.getElementById("progressBar");
-        if(userHasPurchased && certificateData) {
-            certDiv.innerHTML = `
-                <p><strong>藏品编号</strong>: ${certData.certId}</p>
-                <p><strong>上链时间</strong>: ${certData.blockTime}</p>
-                <p><strong>区块链哈希</strong>: <span class="hash">${certData.hash}</span></p>
-                <p><strong>所有权人</strong>: 纳溪竹雕守护者#${guardianNumber}</p>
-                <p><i class="fas fa-link"></i> 联盟链存证 | 不可篡改</p>
-            `;
-        } else if(userHasPurchased) {
-            // 遗留备份
+        const guardianDiv = document.getElementById("guardianDisplay");
+        if(userPurchased && certificateData) {
+            certDiv.innerHTML = `<p><strong>藏品编号</strong>: ${certificateData.certId}</p><p><strong>上链时间</strong>: ${certificateData.blockTime}</p><p><strong>区块链哈希</strong>: <span class="hash">${certificateData.hash}</span></p><p><i class="fas fa-link"></i> 联盟链存证 | 不可篡改</p>`;
+            guardianDiv.innerHTML = `<i class="fas fa-crown"></i> 纳溪竹雕第 ${guardianNumber} 号守护者 · 刀痕共永生`;
+        } else if(userPurchased) {
             certDiv.innerHTML = `<p>已拥有数字藏品，证书已上链。请刷新查看完整信息</p>`;
+            guardianDiv.innerHTML = `<i class="fas fa-leaf"></i> 守护者编号: ${guardianNumber}`;
         } else {
-            certDiv.innerHTML = `<p>尚未拥有任何数字藏品，请前往首页购买开启“数字碑林”之旅。</p>`;
+            certDiv.innerHTML = `<p>暂未购买数字藏品，购买后获得链上证书与守护者身份。</p>`;
+            guardianDiv.innerHTML = "";
         }
         let unlockedCount = unlockedKnives.length;
-        let total = 70;
-        progressEl.innerText = `已解锁: ${unlockedCount} / ${total}`;
-        if(progressBar) progressBar.value = unlockedCount;
-        // 集齐兑换优惠券
+        document.getElementById("collectProgress").innerText = unlockedCount;
+        document.getElementById("progressBar").value = unlockedCount;
         const couponMsg = document.getElementById("couponMsg");
-        if(unlockedCount >= 70) {
-            couponMsg.innerHTML = '<span class="badge">🎉 集齐70把刻刀！可联系客服兑换纳溪竹雕实体优惠券一张</span>';
-        } else {
-            couponMsg.innerHTML = '⭐ 收集全部70把刻刀可兑换实体优惠券，分享海报/邀请好友随机解锁刻刀。';
-        }
+        if(unlockedCount >= 70) couponMsg.innerHTML = '<span style="background:#b8863d; padding:2px 12px; border-radius:30px;">🎉 集齐70把刻刀！可联系客服兑换实体优惠券 🎉</span>';
+        else couponMsg.innerHTML = '⭐ 收集全部70把刻刀可兑换实体竹雕优惠券，分享AR作品随机解锁新刻刀。';
     }
-    
-    // 随机解锁一把未解锁的刻刀 (通过分享或AR互动)
+
     function unlockRandomKnife() {
-        let lockedIndices = [];
-        for(let i=0;i<70;i++) {
-            if(!unlockedKnives.includes(i)) lockedIndices.push(i);
-        }
-        if(lockedIndices.length === 0) {
-            showToast("恭喜！你已经集齐了所有70把刻刀！");
-            return false;
-        }
-        let randomIndex = lockedIndices[Math.floor(Math.random() * lockedIndices.length)];
-        unlockedKnives.push(randomIndex);
-        saveLocalData();
-        renderKnifeGallery();
-        updateCertAndProgress();
-        showToast(`🎉 解锁新刻刀: ${KNIFE_NAMES[randomIndex]}！继续收集传承刀痕。`);
+        let locked = [];
+        for(let i=0;i<70;i++) if(!unlockedKnives.includes(i)) locked.push(i);
+        if(locked.length === 0) { showToast("恭喜！已集齐全部刻刀！"); return false; }
+        let rand = locked[Math.floor(Math.random()*locked.length)];
+        unlockedKnives.push(rand);
+        updateUI();
+        showToast(`✨ 解锁「${KNIFE_NAMES[rand]}」！继续收集刀痕记忆。`);
         return true;
     }
-    
-    // 购买模拟
-    function purchase(priceType) {
-        if(userHasPurchased) {
-            showToast("您已拥有数字藏品，感谢守护！可继续收集刻刀。");
-            return;
-        }
+
+    function purchase() {
+        if(userPurchased) { showToast("您已是守护者，感谢传承！"); return; }
         // 模拟支付
-        showModal(`🎋 支付成功！您已成为纳溪竹雕第 ${guardianNumber} 号守护者。已获得「第一把虚拟刻刀」并解锁AR雕刻功能。`);
-        userHasPurchased = true;
-        // 生成证书数据
         const now = new Date();
-        const timeStr = now.toLocaleString();
-        const fakeHash = "0x" + Array(64).fill(0).map(()=>Math.floor(Math.random()*16).toString(16)).join('');
         certificateData = {
             certId: `ZY-${guardianNumber}-${Date.now()}`,
-            blockTime: timeStr,
-            hash: fakeHash
+            blockTime: now.toLocaleString(),
+            hash: "0x" + Array(64).fill(0).map(()=>Math.floor(Math.random()*16).toString(16)).join('')
         };
-        window.certData = certificateData;
-        // 解锁第一把刻刀(索引0)
+        userPurchased = true;
         if(!unlockedKnives.includes(0)) unlockedKnives.push(0);
-        saveLocalData();
-        updateUIByState();
+        updateUI();
+        showModal(`🎋 恭喜！您成为纳溪竹雕第 ${guardianNumber} 号守护者，获得「第一把虚拟刻刀」及链上证书。`);
     }
-    
-    // AR 绘画逻辑 --------------------------------------------
-    let video, canvas, ctx, drawing = false, lastX, lastY;
-    let currentTool = "圆刀"; // 影响线条宽度/样式
-    let stream = null;
-    
+
+    // AR 绘图逻辑 (支持鼠标+触摸)
+    let video, canvas, ctx, drawing=false, lastX, lastY, currentTool="圆刀";
+    let arStream = null;
     async function initAR() {
         video = document.getElementById("arVideo");
         canvas = document.getElementById("arCanvas");
         ctx = canvas.getContext("2d");
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-            video.srcObject = stream;
+            arStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            video.srcObject = arStream;
             await video.play();
-            // 设置canvas尺寸匹配视频
-            const resizeCanvas = () => {
-                const rect = canvas.parentElement.getBoundingClientRect();
+            function resizeCanvas() {
+                let rect = canvas.parentElement.getBoundingClientRect();
                 canvas.width = rect.width;
                 canvas.height = rect.height;
-                video.style.width = "100%";
-                video.style.height = "100%";
                 ctx.clearRect(0,0,canvas.width,canvas.height);
-            };
+            }
             resizeCanvas();
             window.addEventListener("resize", resizeCanvas);
-            // 触摸绘图事件
-            canvas.addEventListener("touchstart", handleDrawStart);
-            canvas.addEventListener("touchmove", handleDrawMove);
-            canvas.addEventListener("touchend", () => drawing=false);
-            canvas.addEventListener("touchcancel", () => drawing=false);
-        } catch(e) {
-            alert("无法访问摄像头，请在安全环境(https)下允许权限，体验AR雕刻");
-        }
+            // 鼠标事件 (PC)
+            canvas.addEventListener("mousedown", startDraw);
+            canvas.addEventListener("mousemove", drawMove);
+            canvas.addEventListener("mouseup", () => drawing=false);
+            canvas.addEventListener("mouseleave", () => drawing=false);
+            // 触摸
+            canvas.addEventListener("touchstart", (e)=>{ e.preventDefault(); let rect=canvas.getBoundingClientRect(); let t=e.touches[0]; startDrawWithCoords((t.clientX-rect.left)*(canvas.width/rect.width), (t.clientY-rect.top)*(canvas.height/rect.height)); });
+            canvas.addEventListener("touchmove", (e)=>{ e.preventDefault(); if(!drawing)return; let rect=canvas.getBoundingClientRect(); let t=e.touches[0]; let x=(t.clientX-rect.left)*(canvas.width/rect.width), y=(t.clientY-rect.top)*(canvas.height/rect.height); drawLine(lastX,lastY,x,y); lastX=x; lastY=y; });
+            canvas.addEventListener("touchend",()=>drawing=false);
+        } catch(e) { console.warn(e); alert("无法访问摄像头，请在安全环境(https)下体验AR模拟雕刻"); }
     }
-    
-    function handleDrawStart(e) {
-        e.preventDefault();
-        drawing = true;
-        const rect = canvas.getBoundingClientRect();
-        const touch = e.touches[0];
-        lastX = (touch.clientX - rect.left) * (canvas.width/rect.width);
-        lastY = (touch.clientY - rect.top) * (canvas.height/rect.height);
-        drawDot(lastX, lastY);
-    }
-    
-    function handleDrawMove(e) {
-        e.preventDefault();
-        if(!drawing) return;
-        const rect = canvas.getBoundingClientRect();
-        const touch = e.touches[0];
-        let currX = (touch.clientX - rect.left) * (canvas.width/rect.width);
-        let currY = (touch.clientY - rect.top) * (canvas.height/rect.height);
-        drawLine(lastX, lastY, currX, currY);
-        lastX = currX;
-        lastY = currY;
-    }
-    
-    function drawLine(x0,y0,x1,y1) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(x0,y0);
-        ctx.lineTo(x1,y1);
-        let lineWidth = 8;
-        if(currentTool === "圆刀") lineWidth = 6;
-        else if(currentTool === "平刀") lineWidth = 14;
-        else if(currentTool === "尖刀") lineWidth = 3;
-        ctx.lineWidth = lineWidth;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "#e9c17b";
-        ctx.shadowBlur = 0;
-        ctx.stroke();
-        ctx.restore();
-    }
-    function drawDot(x,y) {
-        ctx.beginPath();
-        ctx.arc(x,y, currentTool === "平刀"?8:4, 0, 2*Math.PI);
-        ctx.fillStyle = "#e9c17b";
-        ctx.fill();
-    }
-    
-    function clearCanvasAR() {
-        if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height);
-    }
-    
-    // 分享海报生成(AR界面截图)
+    function startDraw(e) { e.preventDefault(); let rect=canvas.getBoundingClientRect(); let x=(e.clientX-rect.left)*(canvas.width/rect.width), y=(e.clientY-rect.top)*(canvas.height/rect.height); startDrawWithCoords(x,y); }
+    function startDrawWithCoords(x,y) { drawing=true; lastX=x; lastY=y; drawDot(x,y); }
+    function drawMove(e) { if(!drawing) return; let rect=canvas.getBoundingClientRect(); let x=(e.clientX-rect.left)*(canvas.width/rect.width), y=(e.clientY-rect.top)*(canvas.height/rect.height); drawLine(lastX,lastY,x,y); lastX=x; lastY=y; }
+    function drawLine(x0,y0,x1,y1) { ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); let w = currentTool==="圆刀"?6:(currentTool==="平刀"?14:4); ctx.lineWidth=w; ctx.lineCap="round"; ctx.strokeStyle="#e9c17b"; ctx.stroke(); }
+    function drawDot(x,y) { ctx.beginPath(); ctx.arc(x,y,currentTool==="平刀"?8:4,0,2*Math.PI); ctx.fillStyle="#e9c17b"; ctx.fill(); }
+    function clearCanvas() { if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height); }
+
+    // 分享海报 (生成AR截图，解锁刻刀+隐藏刀)
     async function shareARPoster() {
-        if(!userHasPurchased) {
-            showModal("请先购买任意数字藏品，成为守护者后即可分享AR作品并获得隐藏刻刀!");
-            return;
-        }
-        const arContainer = document.querySelector(".ar-container");
+        if(!userPurchased) { showModal("请先购买数字藏品，成为守护者后体验分享"); return; }
+        const arContainer = document.querySelector(".ar-camera");
         if(!arContainer) return;
         try {
             const canvasImg = await html2canvas(arContainer, { scale: 2, backgroundColor: "#000" });
             const link = document.createElement("a");
-            link.download = "zhuyun_ar_creation.png";
+            link.download = "zhuyun_ar_carving.png";
             link.href = canvasImg.toDataURL();
             link.click();
-            // 分享成功后解锁随机刻刀 + 如果隐藏刀未解锁, 首次分享解锁隐藏刀机制(额外)
-            let newUnlock = false;
             if(!hiddenUnlocked) {
                 hiddenUnlocked = true;
-                newUnlock = true;
-                showToast("✨ 恭喜！分享成功解锁「传承之刀」第71把！");
-                renderKnifeGallery();
-                updateCertAndProgress();
+                showToast("🎉 恭喜解锁「传承之刀」第71把！");
+                updateUI();
             } else {
-                if(unlockRandomKnife()) newUnlock = true;
-                else showToast("分享成功！感谢弘扬竹雕文化");
+                unlockRandomKnife();
             }
-            if(!newUnlock && !hiddenUnlocked) unlockRandomKnife();
-            saveLocalData();
-        } catch(e) { console.log(e); alert("生成海报失败");}
+        } catch(e) { alert("生成失败");}
     }
-    
-    // 普通分享按钮，用于我的页面生成守护者海报
+
     async function shareGuardianPoster() {
-        if(!userHasPurchased) { showModal("请先购买成为守护者"); return; }
-        const myCard = document.querySelector("#certificateArea");
+        if(!userPurchased) { showModal("请先购买成为守护者"); return; }
+        const certElem = document.getElementById("certificateArea");
         const tempDiv = document.createElement("div");
-        tempDiv.style.background = "#2c2418";
-        tempDiv.style.padding = "20px";
-        tempDiv.style.borderRadius = "32px";
-        tempDiv.innerHTML = `<div style="text-align:center;"><h2>竹韵链藏·守护者</h2><p>纳溪竹雕第 ${guardianNumber} 号守护者</p><p>“刀尖上的数字碑林”</p><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%23b8863d' d='M50,20 L70,50 L50,80 L30,50 Z'/%3E%3C/svg%3E" width="60"/><p>已拥有数字证书: ${certificateData?.certId||'ZY-001'}</p></div>`;
+        tempDiv.style.background="#2c2418"; tempDiv.style.padding="20px"; tempDiv.style.borderRadius="32px"; tempDiv.style.width="300px";
+        tempDiv.innerHTML = `<div style="text-align:center;"><h2>竹韵链藏</h2><p>纳溪竹雕第${guardianNumber}号守护者</p><p>“刀尖上的数字碑林”</p><p>${certificateData?.certId||'ZY-证书'}</p><i class="fas fa-bamboo"></i><p>让刀痕永生</p></div>`;
         document.body.appendChild(tempDiv);
-        const canvasImg = await html2canvas(tempDiv, { scale: 2 });
+        const poster = await html2canvas(tempDiv);
         const link = document.createElement("a");
         link.download = "zhuyun_guardian.png";
-        link.href = canvasImg.toDataURL();
+        link.href = poster.toDataURL();
         link.click();
         document.body.removeChild(tempDiv);
-        unlockRandomKnife(); // 分享也能解锁刻刀
+        unlockRandomKnife();
     }
-    
-    // 辅助UI
-    function showModal(msg) {
-        const modal = document.getElementById("globalModal");
-        document.getElementById("modalText").innerText = msg;
-        modal.classList.add("active");
-    }
-    function showToast(msg) {
-        let toast = document.createElement("div");
-        toast.innerText = msg;
-        toast.style.position = "fixed"; toast.style.bottom = "30px"; toast.style.left = "50%"; toast.style.transform="translateX(-50%)";
-        toast.style.backgroundColor = "#1f1912"; toast.style.color="#f5cf8e"; toast.style.padding="8px 16px"; toast.style.borderRadius="40px"; toast.style.zIndex=1001;
-        document.body.appendChild(toast);
-        setTimeout(()=>toast.remove(),2000);
-    }
-    
-    // 页面切换 & 初始化
-    document.querySelectorAll(".tab").forEach(tab => {
-        tab.addEventListener("click", () => {
-            document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-            tab.classList.add("active");
-            const pageId = tab.getAttribute("data-tab") + "Page";
-            document.querySelectorAll(".page").forEach(p=>p.classList.remove("active-page"));
-            document.getElementById(pageId).classList.add("active-page");
-            if(pageId === "arPage" && !stream) initAR();
-        });
-    });
-    
-    document.getElementById("buyNowBtn").addEventListener("click", () => {
-        let selected = document.querySelector(".price-card.selected");
-        if(!selected) selected = document.querySelector(".price-card");
-        const price = selected.getAttribute("data-price");
-        purchase(price);
-    });
-    document.querySelectorAll(".price-card").forEach(card => {
-        card.addEventListener("click", function() {
-            document.querySelectorAll(".price-card").forEach(c=>c.classList.remove("selected"));
-            this.classList.add("selected");
-        });
-    });
-    document.getElementById("closeModal").addEventListener("click", () => {
-        document.getElementById("globalModal").classList.remove("active");
-        updateUIByState();
-    });
-    document.getElementById("shareARBtn")?.addEventListener("click", shareARPoster);
-    document.getElementById("sharePosterBtn")?.addEventListener("click", shareGuardianPoster);
-    document.getElementById("clearCanvasBtn")?.addEventListener("click", clearCanvasAR);
-    document.querySelectorAll(".chisel").forEach(tool => {
-        tool.addEventListener("click", function() {
-            document.querySelectorAll(".chisel").forEach(t=>t.classList.remove("active-tool"));
-            this.classList.add("active-tool");
-            currentTool = this.getAttribute("data-tool") || "圆刀";
-        });
-    });
-    
-    loadLocalData();
-    // 若没有购买，首屏展示购买引导; AR页面预留给后续摄像头请求
-</script>
-</body>
-</html>
-</script>
 
+    function showModal(msg) { document.getElementById("modalText").innerText=msg; document.getElementById("globalModal").classList.add("active"); }
+    function showToast(msg) { let t=document.createElement("div"); t.innerText=msg; t.style.position="fixed"; t.style.bottom="30px"; t.style.left="50%"; t.style.transform="translateX(-50%)"; t.style.backgroundColor="#1f1912"; t.style.color="#f5cf8e"; t.style.padding="8px 20px"; t.style.borderRadius="40px"; t.style.zIndex=1001; document.body.appendChild(t); setTimeout(()=>t.remove(),2000);}
+
+    // 事件绑定
+    document.getElementById("buyBtn").onclick = purchase;
+    document.getElementById("closeModal").onclick = ()=>document.getElementById("globalModal").classList.remove("active");
+    document.getElementById("shareARPosterBtn").onclick = shareARPoster;
+    document.getElementById("generatePosterBtn").onclick = shareGuardianPoster;
+    document.getElementById("clearCanvasBtn").onclick = clearCanvas;
+    document.querySelectorAll(".chisel").forEach(tool=>{
+        tool.onclick = ()=>{ document.querySelectorAll(".chisel").forEach(t=>t.classList.remove("active-tool")); tool.classList.add("active-tool"); currentTool = tool.getAttribute("data-tool")||"圆刀"; };
+    });
+    // 价格选择
+    document.querySelectorAll(".price-card").forEach(c=>c.onclick=function(){ document.querySelectorAll(".price-card").forEach(p=>p.classList.remove("selected")); this.classList.add("selected"); });
+    // 初始化
+    loadData();
+    initAR();
+</script>
 </body>
 </html>
